@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "733187092963",
+    "project_id": "retaskd-cb23e",
+    "storage_bucket": "retaskd-cb23e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733187092963:android:18f12310299044bc60b0d6",
+        "android_client_info": {
+          "package_name": "com.marko.retaskd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733187092963-vn73t2ntt1jbqg0fsi2gfr8p24nuoedo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK302xEqJdG89ZYVQED4KM_Dd2n6z6rOE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733187092963-vn73t2ntt1jbqg0fsi2gfr8p24nuoedo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

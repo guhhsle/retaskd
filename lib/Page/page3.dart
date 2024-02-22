@@ -1,0 +1,132 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:retaskd/Functions/audio_functions.dart';
+import 'package:retaskd/Sheets/sheet_rec.dart';
+import 'package:retaskd/data.dart';
+import 'package:path/path.dart' as path;
+import 'package:flutter/foundation.dart';
+
+import '../theme/colors.dart';
+
+class Page3 extends StatefulWidget {
+  const Page3({Key? key}) : super(key: key);
+
+  @override
+  State<Page3> createState() => _Page3State();
+}
+
+class _Page3State extends State<Page3> {
+  @override
+  void initState() {
+    recNames.clear();
+    if (!kIsWeb) {
+      recordings.value = Directory(pf['recDirectory']).listSync();
+    }
+    for (var i = 0; i < recordings.value.length; i++) {
+      recNames.add(path.basename(recordings.value[i].path));
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        refreshRecordings();
+      },
+      child: ValueListenableBuilder<List>(
+        valueListenable: recordings,
+        builder: (context, data, child) {
+          if (data.isEmpty) {
+            return Stack(
+              children: [
+                Center(
+                  child: Icon(
+                    Icons.graphic_eq_rounded,
+                    color: Theme.of(context).primaryColor.withOpacity(0.4),
+                    size: 84,
+                  ),
+                ),
+                ListView()
+              ],
+            );
+          } else {
+            return ListView.builder(
+              padding: EdgeInsets.only(
+                top: 18,
+                bottom: pf['actionPosition'] == 'Top' ? 16 : 80,
+              ),
+              itemCount: data.length,
+              reverse: pf['reverseList'],
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  elevation: 4,
+                  shadowColor: pf['transparentRec'] ? Colors.transparent : Theme.of(context).primaryColor,
+                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+                  color: pf['transparentRec'] ? Colors.transparent : colors.values.elementAt(index % 6),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(
+                      color: pf['transparentRec']
+                          ? Theme.of(context).primaryColor
+                          : colors.values.elementAt((index + 8) % 6),
+                      width: 2,
+                    ),
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.transparent,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          return SheetRec(index: index);
+                        },
+                      );
+                    },
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 16, left: 16),
+                          child: Row(
+                            children: [
+                              Text(
+                                path.basename(data[index].path),
+                                style: TextStyle(
+                                  color: pf['transparentRec']
+                                      ? Theme.of(context).primaryColor
+                                      : colors.values.elementAt((index + 8) % 6),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Icon(
+                                    Icons.multitrack_audio_rounded,
+                                    color: pf['transparentRec']
+                                        ? Theme.of(context).primaryColor
+                                        : colors.values.elementAt((index + 8) % 6),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+}
